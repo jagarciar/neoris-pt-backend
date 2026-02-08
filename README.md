@@ -1210,22 +1210,8 @@ Para publicar en IIS:
 - [Swagger Documentation](https://swagger.io/docs/)
 - [Clean Architecture Guide](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-## 👥 Contribución
-
-Para contribuir al proyecto:
-
-1. Crea una rama desde `main`
-2. Realiza tus cambios siguiendo los principios SOLID
-3. Asegúrate de que el código compile sin errores
-4. Documenta tus cambios
-5. Crea un Pull Request
-
-## 📄 Licencia
-
-Este proyecto es propiedad de Neoris. Todos los derechos reservados.
-
 ---
 
 **Última actualización**: Febrero 8, 2026  
 **Versión**: 1.0  
-**Mantenedor**: Equipo Neoris PT
+**Mantenedor**: Jeyson Andrés García Rodríguez
