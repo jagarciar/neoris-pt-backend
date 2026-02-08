@@ -534,11 +534,9 @@ reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full
 
 ```cmd
 where msbuild
-```
-
-```cmd
 where nuget
 ```
+
 
 ## 🔍 Acceder a la aplicación
 
@@ -580,15 +578,279 @@ Una vez ejecutándose, accede a:
 
 ## 📝 Ejemplos de Uso
 
-### Crear un autor (POST)
+### 1️⃣ Autenticación - Login (POST)
+
+**Request:**
+```bash
+curl -X POST http://localhost:5000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "admin123"
+  }'
+```
+
+**Response (200 OK):**
 ```json
 {
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiresIn": 3600,
+  "mensaje": "Login exitoso"
+}
+```
+
+### 2️⃣ Obtener todos los autores (GET)
+
+**Request:**
+```bash
+curl -X GET http://localhost:5000/api/v1/autores \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": 1,
+    "nombre": "Gabriel Garcia Marquez",
+    "fechaNacimiento": "1927-03-06",
+    "ciudadProcedencia": "Aracataca",
+    "email": "gabriel.garcia@neoris.com"
+  },
+  {
+    "id": 2,
+    "nombre": "Pablo Neruda",
+    "fechaNacimiento": "1904-07-12",
+    "ciudadProcedencia": "Parral",
+    "email": "pablo.neruda@neoris.com"
+  }
+]
+```
+
+### 3️⃣ Obtener un autor por ID (GET)
+
+**Request:**
+```bash
+curl -X GET http://localhost:5000/api/v1/autores/1 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
   "nombre": "Gabriel Garcia Marquez",
   "fechaNacimiento": "1927-03-06",
   "ciudadProcedencia": "Aracataca",
   "email": "gabriel.garcia@neoris.com"
 }
 ```
+
+### 4️⃣ Crear un autor (POST)
+
+**Request:**
+```bash
+curl -X POST http://localhost:5000/api/v1/autores \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "nombre": "Jorge Luis Borges",
+    "fechaNacimiento": "1899-08-24",
+    "ciudadProcedencia": "Buenos Aires",
+    "email": "jorge.borges@neoris.com"
+  }'
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": 3,
+  "nombre": "Jorge Luis Borges",
+  "fechaNacimiento": "1899-08-24",
+  "ciudadProcedencia": "Buenos Aires",
+  "email": "jorge.borges@neoris.com"
+}
+```
+
+### 5️⃣ Actualizar un autor (PUT)
+
+**Request:**
+```bash
+curl -X PUT http://localhost:5000/api/v1/autores/1 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "nombre": "Gabriel Garcia Marquez",
+    "fechaNacimiento": "1927-03-06",
+    "ciudadProcedencia": "Aracataca",
+    "email": "gabriel.updated@neoris.com"
+  }'
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "nombre": "Gabriel Garcia Marquez",
+  "fechaNacimiento": "1927-03-06",
+  "ciudadProcedencia": "Aracataca",
+  "email": "gabriel.updated@neoris.com"
+}
+```
+
+### 6️⃣ Eliminar un autor (DELETE)
+
+**Request:**
+```bash
+curl -X DELETE http://localhost:5000/api/v1/autores/3 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+**Response (204 No Content):**
+```
+(sin cuerpo de respuesta)
+```
+
+### 7️⃣ Crear un libro (POST)
+
+**Request:**
+```bash
+curl -X POST http://localhost:5000/api/v1/libros \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "titulo": "Cien años de soledad",
+    "año": 1967,
+    "autorId": 1,
+    "descripcion": "Una novela épica que narra la historia de la familia Buendía"
+  }'
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": 1,
+  "titulo": "Cien años de soledad",
+  "año": 1967,
+  "autorId": 1,
+  "autor": {
+    "id": 1,
+    "nombre": "Gabriel Garcia Marquez"
+  },
+  "descripcion": "Una novela épica que narra la historia de la familia Buendía"
+}
+```
+
+### 8️⃣ Obtener todos los libros (GET)
+
+**Request:**
+```bash
+curl -X GET http://localhost:5000/api/v1/libros \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": 1,
+    "titulo": "Cien años de soledad",
+    "año": 1967,
+    "autorId": 1,
+    "autor": {
+      "id": 1,
+      "nombre": "Gabriel Garcia Marquez"
+    }
+  },
+  {
+    "id": 2,
+    "titulo": "Don Quijote",
+    "año": 1605,
+    "autorId": 2,
+    "autor": {
+      "id": 2,
+      "nombre": "Miguel de Cervantes"
+    }
+  }
+]
+```
+
+### 9️⃣ Obtener un libro por ID (GET)
+
+**Request:**
+```bash
+curl -X GET http://localhost:5000/api/v1/libros/1 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "titulo": "Cien años de soledad",
+  "año": 1967,
+  "autorId": 1,
+  "autor": {
+    "id": 1,
+    "nombre": "Gabriel Garcia Marquez"
+  }
+}
+```
+
+### 🔟 Actualizar un libro (PUT)
+
+**Request:**
+```bash
+curl -X PUT http://localhost:5000/api/v1/libros/1 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "titulo": "Cien años de soledad (Edición actualizada)",
+    "año": 1967,
+    "autorId": 1
+  }'
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "titulo": "Cien años de soledad (Edición actualizada)",
+  "año": 1967,
+  "autorId": 1,
+  "autor": {
+    "id": 1,
+    "nombre": "Gabriel Garcia Marquez"
+  }
+}
+```
+
+### 1️⃣1️⃣ Eliminar un libro (DELETE)
+
+**Request:**
+```bash
+curl -X DELETE http://localhost:5000/api/v1/libros/2 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+**Response (204 No Content):**
+```
+(sin cuerpo de respuesta)
+```
+
+### 🔧 Notas sobre los ejemplos:
+
+- **Token JWT**: Todos los endpoints (excepto `/auth/login`) requieren autenticación
+- **Obtener el token**: Ejecuta primero el endpoint de login para obtener un token válido
+- **Reemplazar {id}**: Cambia los ID por valores reales en tu base de datos
+- **Códigos de estado**:
+  - `200 OK` - Operación exitosa
+  - `201 Created` - Recurso creado exitosamente
+  - `204 No Content` - Eliminación exitosa
+  - `400 Bad Request` - Datos inválidos
+  - `401 Unauthorized` - Token no válido o expirado
+  - `404 Not Found` - Recurso no encontrado
+
 
 ## 🔍 Documentación Swagger
 
@@ -619,7 +881,3 @@ Para publicar en IIS:
 4. Publica el proyecto
 5. Configura un Application Pool en IIS con .NET Framework 4.8
 6. Asigna el sitio web a la carpeta publicada
-
-## 📄 Licencia
-
-Este proyecto es de código abierto y está disponible para uso educativo.
