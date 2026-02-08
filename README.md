@@ -1,23 +1,38 @@
-# Neoris Backend
+# Neoris Backend API
 
-API REST desarrollada con ASP.NET Web API (.NET Framework 4.8) que expone endpoints para gestionar autores. Implementado siguiendo principios de **Clean Architecture** y **SOLID**.
+API REST desarrollada con **ASP.NET Web API (.NET Framework 4.8)** para gestionar autores y libros. Implementado siguiendo principios de **Clean Architecture** y **SOLID**.
 
 ## 🚀 Características
 
 - **ASP.NET Web API** (.NET Framework 4.8)
-- **RESTful API** con controladores
+- **RESTful API** con versionado (v1)
 - **Swagger** para documentación interactiva
-- **CORS** habilitado
-- **JWT** para autenticación
-- Operaciones **CRUD completas**
+- **CORS** habilitado para todos los orígenes
+- **Autenticación JWT** (Bearer Token)
+- **Entity Framework 6.4.4** con SQL Server
+- **Operaciones CRUD completas** para Autores y Libros
+- **Validaciones de negocio** (ej: límite máximo de libros)
 - Compatible con Windows Server / IIS
 - ✅ **Arquitectura Limpia (Clean Architecture)**
-- ✅ **Separación de Responsabilidades**
 - ✅ **Inyección de Dependencias (Unity)**
 - ✅ **Repository Pattern y Unit of Work**
 - ✅ **DTOs para contratos de API**
+- ✅ **Logging con Serilog**
 - ✅ **Principios SOLID implementados**
-- ✅ **Fácil de testear y mantener**
+
+## 📦 Conexión a Base de Datos
+
+La aplicación se conecta a **SQL Server 2022** ejecutándose en Docker:
+
+```xml
+<connectionStrings>
+  <add name="DefaultConnection" 
+       connectionString="Server=localhost,1433;Database=NeorisPTDB;User Id=sa;Password=Neoris2026!;TrustServerCertificate=True;" 
+       providerName="System.Data.SqlClient" />
+</connectionStrings>
+```
+
+**Nota**: Asegúrate de que SQL Server esté corriendo en Docker antes de ejecutar el backend. Ver instrucciones en el README principal del proyecto.
 
 ## 📁 Estructura del Proyecto
 
@@ -103,6 +118,132 @@ neoris-pt-backend/
 - .NET Framework 4.8 o superior
 - Visual Studio 2019/2022 (recomendado)
 - IIS Express o IIS para hosting
+- SQL Server 2022 (ejecutándose en Docker)
+
+## 🔐 Autenticación JWT
+
+La API utiliza **JSON Web Tokens (JWT)** para autenticación. Todos los endpoints excepto `/api/v1/auth/login` requieren un token válido.
+
+### Configuración en Web.config
+
+```xml
+<appSettings>
+  <add key="JwtIssuer" value="neorisptbackend" />
+  <add key="JwtAudience" value="neorisptbackend" />
+  <add key="JwtSecret" value="NeorisJwt2026SuperSecretKey12345" />
+  <add key="JwtExpirationSeconds" value="3600" />
+  <add key="AuthUsername" value="neoris-pt-frontend" />
+  <add key="AuthPassword" value="SecurePassword2026#NeorisSecure" />
+</appSettings>
+```
+
+### Credenciales de Acceso
+
+Para obtener un token JWT, usa estas credenciales:
+
+- **Usuario**: `neoris-pt-frontend`
+- **Contraseña**: `SecurePassword2026#NeorisSecure`
+- **Endpoint**: `POST /api/v1/auth/login`
+
+### Ejemplo de Autenticación
+
+**Request:**
+```http
+POST http://localhost:5000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "neoris-pt-frontend",
+  "password": "SecurePassword2026#NeorisSecure"
+}
+```
+
+**Response:**
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "tokenType": "Bearer",
+  "expiresAtUtc": "2026-02-08T21:30:00Z"
+}
+```
+
+### Uso del Token
+
+Incluye el token en el header `Authorization` de todas las peticiones:
+
+```http
+GET http://localhost:5000/api/v1/autores
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+## 📡 Endpoints de la API
+
+### 🔓 Autenticación
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/v1/auth/login` | Obtener token JWT | ❌ No |
+| GET | `/api/v1/auth/me` | Info del usuario autenticado | ✅ Sí |
+
+### 📚 Autores
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/v1/autores` | Listar todos los autores | ✅ Sí |
+| GET | `/api/v1/autores/{id}` | Obtener un autor por ID | ✅ Sí |
+| POST | `/api/v1/autores` | Crear un nuevo autor | ✅ Sí |
+| PUT | `/api/v1/autores/{id}` | Actualizar un autor | ✅ Sí |
+| DELETE | `/api/v1/autores/{id}` | Eliminar un autor | ✅ Sí |
+
+### 📖 Libros
+
+| Método | Endpoint | Descripción | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/v1/libros` | Listar todos los libros | ✅ Sí |
+| GET | `/api/v1/libros/{id}` | Obtener un libro por ID | ✅ Sí |
+| POST | `/api/v1/libros` | Crear un nuevo libro | ✅ Sí |
+| PUT | `/api/v1/libros/{id}` | Actualizar un libro | ✅ Sí |
+| DELETE | `/api/v1/libros/{id}` | Eliminar un libro | ✅ Sí |
+
+## ⚙️ Reglas de Negocio
+
+### Validación de Límite de Libros
+
+La aplicación valida un **límite máximo de libros** que pueden ser creados. Este límite se configura en `Web.config`:
+
+```xml
+<add key="MaxLibros" value="100" />
+```
+
+**Comportamiento:**
+- Antes de crear un libro, el sistema verifica el total de libros existentes
+- Si se alcanzó el límite, retorna `400 Bad Request` con el mensaje:
+  ```json
+  {
+    "message": "No se puede crear el libro. Se ha alcanzado el límite máximo de 100 libros permitidos."
+  }
+  ```
+- El límite se puede modificar cambiando el valor en `Web.config`
+
+### Validación de Autor al Crear Libro
+
+Al crear o actualizar un libro, se valida que el `AutorId` exista en la base de datos:
+
+```json
+{
+  "message": "El autor con Id 999 no existe"
+}
+```
+
+### Validación de Email Único en Autores
+
+No se permiten autores con el mismo email:
+
+```json
+{
+  "message": "Ya existe un autor con el email especificado"
+}
+```
 
 ## 🏛️ Capas de la Arquitectura
 
@@ -377,21 +518,93 @@ Dependemos de abstracciones (interfaces), no de implementaciones concretas
 
 ---
 
-## 🏃 Ejecución
+## 🏃 Ejecución del Backend
 
-### Desde Visual Studio:
-1. Abre el proyecto en Visual Studio
-2. Presiona F5 para ejecutar con debugging
-3. La aplicación se abrirá en IIS Express
+### ⚠️ Requisitos Previos
 
-### Compilar desde línea de comandos:
-```bash
+Antes de ejecutar el backend, asegúrate de:
+
+1. **SQL Server esté corriendo en Docker**
+   ```powershell
+   # Desde la raíz del proyecto (c:\Users\jeoga\Documents\Neoris\)
+   .\start-stack.ps1
+   
+   # O manualmente:
+   docker-compose up -d
+   ```
+
+2. **Verificar que la base de datos existe**
+   ```powershell
+   docker exec neoris-sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "Neoris2026!" -C -Q "SELECT name FROM sys.databases WHERE name='NeorisPTDB'"
+   ```
+
+### Opción 1: Visual Studio (Recomendado)
+
+1. **Abrir el proyecto**
+   - Abre `Neoris.sln` en Visual Studio 2019/2022
+   - O solo el proyecto: `neoris-pt-backend.csproj`
+
+2. **Establecer como proyecto de inicio**
+   - Clic derecho en `neoris-pt-backend` → **Set as Startup Project**
+
+3. **Restaurar paquetes NuGet**
+   - Clic derecho en la solución → **Restore NuGet Packages**
+   - O: `Tools` → `NuGet Package Manager` → `Package Manager Console`
+   ```powershell
+   Update-Package -Reinstall
+   ```
+
+4. **Compilar el proyecto**
+   - `Build` → `Build Solution` (Ctrl+Shift+B)
+
+5. **Ejecutar**
+   - Presiona **F5** (con debugging) o **Ctrl+F5** (sin debugging)
+   - El navegador abrirá automáticamente: `http://localhost:5000`
+   - Accede a Swagger: `http://localhost:5000/swagger`
+
+### Opción 2: Línea de Comandos
+
+```powershell
+# Navegar al directorio del backend
+cd "c:\Users\jeoga\Documents\Neoris\neoris-pt-backend"
+
 # Restaurar paquetes NuGet
-nuget restore
+nuget restore neoris-pt-backend.csproj
 
 # Compilar el proyecto
-msbuild neoris-pt-backend.csproj /p:Configuration=Release
+msbuild neoris-pt-backend.csproj /p:Configuration=Release /p:Platform="Any CPU"
+
+# Ejecutar con IIS Express (requiere IIS Express instalado)
+"C:\Program Files\IIS Express\iisexpress.exe" /path:"%CD%" /port:5000
 ```
+
+### Verificar que el Backend está corriendo
+
+```bash
+# Verificar endpoint de salud (si existe)
+curl http://localhost:5000/api/v1/auth/me
+
+# O navegar en el navegador a:
+# http://localhost:5000/swagger
+```
+
+### Solución de Problemas
+
+**Error: "The underlying provider failed on Open"**
+- ✅ Verifica que SQL Server esté corriendo: `docker ps`
+- ✅ Verifica la conexión: `docker exec neoris-sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "Neoris2026!" -C -Q "SELECT 1"`
+
+**Error: "IDX10603: Decryption failed"**
+- ✅ Verifica que la clave JWT en `Web.config` sea válida (mínimo 32 caracteres)
+- ✅ Actual clave: `NeorisJwt2026SuperSecretKey12345`
+
+**Error: "Could not load file or assembly"**
+- ✅ Restaura los paquetes NuGet: `nuget restore`
+- ✅ Limpia y recompila: `Clean Solution` → `Rebuild Solution`
+
+**Error al crear libros: "Límite alcanzado"**
+- ✅ Verifica/modifica `MaxLibros` en `Web.config`
+- ✅ Actual límite: `100` libros
 
 ## ⚙️ Compilación y Ejecución (Detalle)
 
@@ -443,101 +656,6 @@ nuget restore neoris-pt-backend.sln
 msbuild neoris-pt-backend.sln /p:Configuration=Release
 ```
 
-### Opción 3: Docker / Docker Compose
-
-#### Requisitos previos:
-- Docker instalado
-- Docker Compose instalado (viene con Docker Desktop)
-
-#### Compilar imagen Docker:
-```bash
-# Desde la raíz del proyecto (donde está el Dockerfile)
-docker build -t neoris-pt-backend:latest .
-
-# O si necesitas especificar la versión de .NET Framework
-docker build -t neoris-pt-backend:4.8 \
-  --build-arg DOTNET_VERSION=4.8 .
-```
-
-#### Ejecutar con Docker:
-```bash
-# Ejecutar el contenedor
-docker run -d \
-  --name neoris-backend \
-  -p 5000:80 \
-  -e ASPNETCORE_ENVIRONMENT=Development \
-  neoris-pt-backend:latest
-
-# Acceder a la aplicación
-# http://localhost:5000/swagger
-```
-
-#### Ejecutar con Docker Compose:
-En el archivo `docker-compose.yml` ya está configurado el backend. Simplemente ejecuta:
-
-```bash
-# Desde el directorio raíz (donde está docker-compose.yml)
-docker-compose up -d
-
-# Ver los logs
-docker-compose logs -f neoris-pt-backend
-
-# Detener los servicios
-docker-compose down
-
-# Detener sin eliminar volúmenes
-docker-compose stop
-```
-
-#### Variables de entorno en Docker:
-```yaml
-# En docker-compose.yml
-environment:
-  - ASPNETCORE_ENVIRONMENT=Development
-  - DATABASE_CONNECTION_STRING=Server=sqlserver;Database=NeorisPT;...
-```
-
-#### Ver logs del contenedor:
-```bash
-# Ver logs en tiempo real
-docker logs -f neoris-backend
-
-# O con Docker Compose
-docker-compose logs -f neoris-pt-backend
-```
-
-#### Limpiar contenedores y imágenes:
-```bash
-# Eliminar contenedor
-docker rm -f neoris-backend
-
-# Eliminar imagen
-docker rmi neoris-pt-backend:latest
-
-# Con Docker Compose
-docker-compose down -v  # Elimina volúmenes también
-```
-
----
-
-### Ejecutar con IIS Express
-
-```cmd
-"C:\Program Files (x86)\IIS Express\iisexpress.exe" /path:C:\Users\jeoga\Documents\Neoris\neoris-pt-backend /port:5000
-```
-
-### Verificar instalación
-
-```powershell
-reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" /v Version
-```
-
-```cmd
-where msbuild
-where nuget
-```
-
-
 ## 🔍 Acceder a la aplicación
 
 Una vez ejecutándose, accede a:
@@ -585,17 +703,17 @@ Una vez ejecutándose, accede a:
 curl -X POST http://localhost:5000/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "username": "admin",
-    "password": "admin123"
+    "username": "neoris-pt-frontend",
+    "password": "SecurePassword2026#NeorisSecure"
   }'
 ```
 
 **Response (200 OK):**
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "expiresIn": 3600,
-  "mensaje": "Login exitoso"
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "tokenType": "Bearer",
+  "expiresAtUtc": "2026-02-08T21:30:00Z"
 }
 ```
 
@@ -615,14 +733,18 @@ curl -X GET http://localhost:5000/api/v1/autores \
     "nombre": "Gabriel Garcia Marquez",
     "fechaNacimiento": "1927-03-06",
     "ciudadProcedencia": "Aracataca",
-    "email": "gabriel.garcia@neoris.com"
+    "email": "gabriel.garcia@neoris.com",
+    "fechaCreacion": "2026-02-08T10:00:00Z",
+    "fechaModificacion": null
   },
   {
     "id": 2,
-    "nombre": "Pablo Neruda",
-    "fechaNacimiento": "1904-07-12",
-    "ciudadProcedencia": "Parral",
-    "email": "pablo.neruda@neoris.com"
+    "nombre": "Isabel Allende",
+    "fechaNacimiento": "1942-08-02",
+    "ciudadProcedencia": "Lima",
+    "email": "isabel.allende@neoris.com",
+    "fechaCreacion": "2026-02-08T10:00:00Z",
+    "fechaModificacion": null
   }
 ]
 ```
@@ -642,7 +764,9 @@ curl -X GET http://localhost:5000/api/v1/autores/1 \
   "nombre": "Gabriel Garcia Marquez",
   "fechaNacimiento": "1927-03-06",
   "ciudadProcedencia": "Aracataca",
-  "email": "gabriel.garcia@neoris.com"
+  "email": "gabriel.garcia@neoris.com",
+  "fechaCreacion": "2026-02-08T10:00:00Z",
+  "fechaModificacion": null
 }
 ```
 
@@ -652,6 +776,158 @@ curl -X GET http://localhost:5000/api/v1/autores/1 \
 ```bash
 curl -X POST http://localhost:5000/api/v1/autores \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "nombre": "Mario Vargas Llosa",
+    "fechaNacimiento": "1936-03-28",
+    "ciudadProcedencia": "Arequipa",
+    "email": "mario.vargas@neoris.com"
+  }'
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": 6,
+  "nombre": "Mario Vargas Llosa",
+  "fechaNacimiento": "1936-03-28",
+  "ciudadProcedencia": "Arequipa",
+  "email": "mario.vargas@neoris.com",
+  "fechaCreacion": "2026-02-08T15:30:00Z",
+  "fechaModificacion": null
+}
+```
+
+**Headers:**
+```
+Location: http://localhost:5000/api/v1/autores/6
+```
+
+### 5️⃣ Actualizar un autor (PUT)
+
+**Request:**
+```bash
+curl -X PUT http://localhost:5000/api/v1/autores/6 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "nombre": "Mario Vargas Llosa (Actualizado)",
+    "fechaNacimiento": "1936-03-28",
+    "ciudadProcedencia": "Lima",
+    "email": "mario.vargas.updated@neoris.com"
+  }'
+```
+
+**Response (200 OK):**
+```json
+{
+  "id": 6,
+  "nombre": "Mario Vargas Llosa (Actualizado)",
+  "fechaNacimiento": "1936-03-28",
+  "ciudadProcedencia": "Lima",
+  "email": "mario.vargas.updated@neoris.com",
+  "fechaCreacion": "2026-02-08T15:30:00Z",
+  "fechaModificacion": "2026-02-08T16:00:00Z"
+}
+```
+
+### 6️⃣ Eliminar un autor (DELETE)
+
+**Request:**
+```bash
+curl -X DELETE http://localhost:5000/api/v1/autores/6 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..."
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Autor 6 eliminado exitosamente"
+}
+```
+
+### 7️⃣ Crear un libro (POST)
+
+**Request:**
+```bash
+curl -X POST http://localhost:5000/api/v1/libros \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "titulo": "El coronel no tiene quien le escriba",
+    "anio": 1961,
+    "genero": "Novela",
+    "numeroPaginas": 104,
+    "autorId": 1
+  }'
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": 6,
+  "titulo": "El coronel no tiene quien le escriba",
+  "anio": 1961,
+  "genero": "Novela",
+  "numeroPaginas": 104,
+  "autorId": 1,
+  "autor": {
+    "id": 1,
+    "nombre": "Gabriel Garcia Marquez",
+    "fechaNacimiento": "1927-03-06",
+    "ciudadProcedencia": "Aracataca",
+    "email": "gabriel.garcia@neoris.com",
+    "fechaCreacion": "2026-02-08T10:00:00Z",
+    "fechaModificacion": null
+  }
+}
+```
+
+### 8️⃣ Error: Límite de libros alcanzado
+
+**Request:**
+```bash
+curl -X POST http://localhost:5000/api/v1/libros \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "titulo": "Nuevo libro",
+    "anio": 2026,
+    "genero": "Ficción",
+    "numeroPaginas": 300,
+    "autorId": 1
+  }'
+```
+
+**Response (400 Bad Request):**
+```json
+{
+  "message": "No se puede crear el libro. Se ha alcanzado el límite máximo de 100 libros permitidos."
+}
+```
+
+### 9️⃣ Error: Autor no existe
+
+**Request:**
+```bash
+curl -X POST http://localhost:5000/api/v1/libros \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
+  -d '{
+    "titulo": "Libro sin autor",
+    "anio": 2026,
+    "genero": "Ficción",
+    "numeroPaginas": 300,
+    "autorId": 999
+  }'
+```
+
+**Response (400 Bad Request):**
+```json
+{
+  "message": "El autor con Id 999 no existe"
+}
+```
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
   -d '{
     "nombre": "Jorge Luis Borges",
@@ -881,3 +1157,75 @@ Para publicar en IIS:
 4. Publica el proyecto
 5. Configura un Application Pool en IIS con .NET Framework 4.8
 6. Asigna el sitio web a la carpeta publicada
+
+## 📋 Resumen de Configuraciones
+
+### Web.config - Configuraciones Importantes
+
+| Configuración | Valor | Descripción |
+|---------------|-------|-------------|
+| **JwtSecret** | `NeorisJwt2026SuperSecretKey12345` | Clave secreta para JWT (mín. 32 chars) |
+| **JwtIssuer** | `neorisptbackend` | Emisor del token JWT |
+| **JwtAudience** | `neorisptbackend` | Audiencia del token JWT |
+| **JwtExpirationSeconds** | `3600` | Duración del token (1 hora) |
+| **AuthUsername** | `neoris-pt-frontend` | Usuario para autenticación |
+| **AuthPassword** | `SecurePassword2026#NeorisSecure` | Contraseña para autenticación |
+| **MaxLibros** | `100` | Límite máximo de libros permitidos |
+| **ConnectionString** | `Server=localhost,1433;Database=NeorisPTDB;...` | Conexión a SQL Server |
+
+### Puertos y URLs
+
+| Servicio | Puerto | URL |
+|----------|--------|-----|
+| **Backend API** | 5000 | http://localhost:5000 |
+| **Swagger UI** | 5000 | http://localhost:5000/swagger |
+| **SQL Server** | 1433 | localhost,1433 |
+
+### Base de Datos
+
+| Propiedad | Valor |
+|-----------|-------|
+| **Servidor** | localhost,1433 |
+| **Base de Datos** | NeorisPTDB |
+| **Usuario** | sa |
+| **Contraseña** | Neoris2026! |
+| **Proveedor** | SQL Server 2022 (Docker) |
+
+## 🛠️ Tecnologías Utilizadas
+
+- **ASP.NET Web API** - Framework web
+- **Entity Framework 6.4.4** - ORM
+- **Unity Container** - Inyección de dependencias
+- **JWT Bearer Authentication** - Autenticación
+- **Serilog** - Logging
+- **Swashbuckle** - Documentación API (Swagger)
+- **SQL Server 2022** - Base de datos
+- **Microsoft OWIN** - Middleware de autenticación
+
+## 📚 Recursos y Referencias
+
+- [ASP.NET Web API Documentation](https://docs.microsoft.com/en-us/aspnet/web-api/)
+- [Entity Framework 6 Documentation](https://docs.microsoft.com/en-us/ef/ef6/)
+- [JWT.io](https://jwt.io/) - Decodificador de JWT
+- [Swagger Documentation](https://swagger.io/docs/)
+- [Clean Architecture Guide](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
+## 👥 Contribución
+
+Para contribuir al proyecto:
+
+1. Crea una rama desde `main`
+2. Realiza tus cambios siguiendo los principios SOLID
+3. Asegúrate de que el código compile sin errores
+4. Documenta tus cambios
+5. Crea un Pull Request
+
+## 📄 Licencia
+
+Este proyecto es propiedad de Neoris. Todos los derechos reservados.
+
+---
+
+**Última actualización**: Febrero 8, 2026  
+**Versión**: 1.0  
+**Mantenedor**: Equipo Neoris PT

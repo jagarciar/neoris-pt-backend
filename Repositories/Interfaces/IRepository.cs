@@ -12,6 +12,47 @@ namespace NeorisBackend.Repositories.Interfaces
     public interface IRepository<T> where T : class
     {
         /// <summary>
+        /// Permite agregar una nueva entidad al repositorio
+        /// </summary>
+        /// <param name="entity">Entidad a agregar</param>
+        void Add(T entity);
+
+        /// <summary>
+        /// Permite agregar múltiples entidades al repositorio
+        /// </summary>
+        /// <param name="entities">Entidades a agregar</param>
+        void AddRange(IEnumerable<T> entities);
+
+        /// <summary>
+        /// Verifica si existe alguna entidad que cumpla con el predicado especificado
+        /// </summary>
+        /// <param name="predicate">Predicado de búsqueda</param>
+        /// <returns>Verdadero si existe al menos una entidad que cumpla con el predicado</returns>
+        bool Any(Expression<Func<T, bool>> predicate);
+
+        /// <summary>
+        /// Cuenta el número de entidades que cumplen con el predicado especificado
+        /// </summary>
+        /// <param name="predicate">Predicado de búsqueda</param>
+        /// <returns>Total de entidades que cumplen con el predicado</returns>
+        int Count(Expression<Func<T, bool>> predicate);
+
+        /// <summary>
+        /// Busca entidades que cumplan con el predicado especificado
+        /// </summary>
+        /// <param name="predicate">Predicado de búsqueda</param>
+        /// <returns>Conjunto de entidades que cumple con el predicado</returns>
+        IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
+
+        /// <summary>
+        /// Busca entidades que cumplan con el predicado especificado e incluye propiedades relacionadas
+        /// </summary>
+        /// <param name="predicate">Prediccado de búsqueda</param>
+        /// <param name="includeProperties">Propiedades relacionadas a incluir en la carga</param>
+        /// <returns>Conjunto de entidades que cumple con el predicado e incluye propiedades relacionadas</returns>
+        IEnumerable<T> FindIncluding(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
+
+        /// <summary>
         /// Obtiene todas las entidades
         /// </summary>
         IEnumerable<T> GetAll();
@@ -19,61 +60,40 @@ namespace NeorisBackend.Repositories.Interfaces
         /// <summary>
         /// Obtiene todas las entidades con carga ansiosa de propiedades relacionadas
         /// </summary>
+        /// <param name="includeProperties">Propiedades relacionadas a cargar</param>
+        /// <returns>Conjunto de entidades</returns>
         IEnumerable<T> GetAllIncluding(params Expression<Func<T, object>>[] includeProperties);
 
         /// <summary>
-        /// Obtiene una entidad por su ID
+        /// Obtiene una entidad por su identificador
         /// </summary>
+        /// <param name="id">Identificador de la entidad</param>
+        /// <returns>Entidad encontrada o null</returns>
         T GetById(int id);
 
         /// <summary>
-        /// Busca entidades que cumplan con un predicado
+        /// Elimina una entidad del repositorio
         /// </summary>
-        IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
-
-        /// <summary>
-        /// Busca entidades con carga ansiosa de propiedades relacionadas
-        /// </summary>
-        IEnumerable<T> FindIncluding(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
-
-        /// <summary>
-        /// Obtiene un único registro que cumpla con el predicado
-        /// </summary>
-        T SingleOrDefault(Expression<Func<T, bool>> predicate);
-
-        /// <summary>
-        /// Agrega una nueva entidad
-        /// </summary>
-        void Add(T entity);
-
-        /// <summary>
-        /// Agrega múltiples entidades
-        /// </summary>
-        void AddRange(IEnumerable<T> entities);
-
-        /// <summary>
-        /// Actualiza una entidad existente
-        /// </summary>
-        void Update(T entity);
-
-        /// <summary>
-        /// Elimina una entidad
-        /// </summary>
+        /// <param name="entity">Entidad a eliminar</param>
         void Remove(T entity);
 
         /// <summary>
-        /// Elimina múltiples entidades
+        /// Elimina múltiples entidades del repositorio
         /// </summary>
+        /// <param name="entities">Entidades a eliminar</param>
         void RemoveRange(IEnumerable<T> entities);
 
         /// <summary>
-        /// Verifica si existe alguna entidad que cumpla con el predicado
+        /// Obtiene una única entidad que cumpla con el predicado especificado o null si no se encuentra ninguna
         /// </summary>
-        bool Any(Expression<Func<T, bool>> predicate);
+        /// <param name="predicate">Predicado de búsqueda</param>
+        /// <returns>Entidad encontrada o null</returns>
+        T SingleOrDefault(Expression<Func<T, bool>> predicate);
 
         /// <summary>
-        /// Cuenta las entidades que cumplen con el predicado
+        /// Permite actualizar una entidad existente en el repositorio
         /// </summary>
-        int Count(Expression<Func<T, bool>> predicate);
+        /// <param name="entity">Entidad a actualizar</param>
+        void Update(T entity);
     }
 }

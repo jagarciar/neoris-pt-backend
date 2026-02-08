@@ -1,0 +1,449 @@
+{
+  "info": {
+    "_postman_id": "934791bc-797e-46ef-aa09-869bb7bf0641",
+    "name": "Neoris - PT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "60550"
+  },
+  "item": [
+    {
+      "name": "Autores",
+      "item": [
+        {
+          "name": "Obtener todos los autores",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/autores",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "autores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener un autor por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/autores/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "autores",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear un autor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Jeyson Garcia\",\r\n    \"fechaNacimiento\": \"1899-08-24\",\r\n    \"ciudadProcedencia\": \"Buenos Aires\",\r\n    \"email\": \"jeogarod2@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/autores",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "autores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar un autor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Jeyson Garcia\",\r\n    \"fechaNacimiento\": \"1899-08-24\",\r\n    \"ciudadProcedencia\": \"Buenos Aires\",\r\n    \"email\": \"jeogarod3@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/autores/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "autores",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar autor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/autores/9",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "autores",
+                "9"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Libros",
+      "item": [
+        {
+          "name": "Obtener todos los libros",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/libros",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "libros"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener un libro por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/libros/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "libros",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear un libro",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"genero\":\"Terror\",\r\n    \"titulo\": \"Cien años de soledad\",\r\n    \"anio\": 1967,\r\n    \"autorId\": 1,\r\n    \"numeroPaginas\":399,\r\n    \"descripcion\": \"Una novela épica que narra la historia de la familia Buendía\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/libros",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "libros"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar libro",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"genero\":\"Terror\",\r\n    \"titulo\": \"Cien años de soledad\",\r\n    \"anio\": 1967,\r\n    \"autorId\": 1,\r\n    \"numeroPaginas\":399,\r\n    \"descripcion\": \"Una novela épica que narra la historia de la familia Buendía\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/libros/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "libros",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar libro",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"genero\":\"Terror\",\r\n    \"titulo\": \"Cien años de soledad\",\r\n    \"anio\": 1967,\r\n    \"autorId\": 1,\r\n    \"numeroPaginas\":399,\r\n    \"descripcion\": \"Una novela épica que narra la historia de la familia Buendía\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/libros/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "libros",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Seguridad",
+      "item": [
+        {
+          "name": "Autenticación",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"neoris-pt-frontend\",\r\n    \"password\": \"SecurePassword2026#NeorisSecure\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validar token",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibmVvcmlzLXB0LWZyb250ZW5kIiwibmJmIjoxNzcwNTgzMjY0LCJleHAiOjE3NzA1ODY4NjQsImlzcyI6Im5lb3Jpc3B0YmFja2VuZCIsImF1ZCI6Im5lb3Jpc3B0YmFja2VuZCJ9.1V-7XQpPrGgCk2vA9Cy4aH8j8UUN_l6swiQrl89Lex0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

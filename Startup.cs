@@ -11,8 +11,15 @@ using Owin;
 
 namespace NeorisBackend
 {
+    /// <summary>
+    /// Configura la autenticación JWT para la aplicación utilizando OWIN Middleware. Este método se ejecuta al iniciar la aplicación y establece los parámetros de validación del token, incluyendo el emisor, el público, la clave de firma y la duración del token. Además, se asegura de que las solicitudes a la API sean autenticadas correctamente utilizando tokens JWT, lo que proporciona una capa adicional de seguridad para proteger los endpoints de la API contra accesos no autorizados.
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Configura la autenticación JWT para la aplicación utilizando OWIN Middleware. Este método se ejecuta al iniciar la aplicación y establece los parámetros de validación del token, incluyendo el emisor, el público, la clave de firma y la duración del token. Además, se asegura de que las solicitudes a la API sean autenticadas correctamente utilizando tokens JWT, lo que proporciona una capa adicional de seguridad para proteger los endpoints de la API contra accesos no autorizados.
+        /// </summary>
+        /// <param name="app">Constructor de la aplicación OWIN.</param>
         public void Configuration(IAppBuilder app)
         {
             var config = GlobalConfiguration.Configuration;

@@ -9,8 +9,11 @@ namespace NeorisBackend.Repositories.Interfaces
     public interface IAutorRepository : IRepository<Autor>
     {
         /// <summary>
-        /// Verifica si existe un autor con el email especificado
+        /// Verifica si existe un autor con el mismo email, excluyendo un ID específico (útil para actualizaciones)
         /// </summary>
+        /// <param name="email">Correo electrónico del autor a verificar</param>
+        /// <param name="excludeId">Identificador del autor a excluir en la verificación</param>
+        /// <returns></returns>
         bool ExistsWithEmail(string email, int? excludeId = null);
     }
 }
